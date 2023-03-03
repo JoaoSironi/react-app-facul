@@ -5,24 +5,6 @@ import { Pressable, useColorScheme } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDxH5PBYkaSovFc6LwYA1qRlfKZoXrsYFk",
-  authDomain: "tasklist-un.firebaseapp.com",
-  databaseURL: "https://tasklist-un-default-rtdb.firebaseio.com",
-  projectId: "tasklist-un",
-  storageBucket: "tasklist-un.appspot.com",
-  messagingSenderId: "1093057204533",
-  appId: "1:1093057204533:web:1909e903c3934e27647c7c",
-  measurementId: "G-7SCM85PB2X"
-};
-
-// Initialize Firebase
-const db = initializeApp(firebaseConfig);
-const analytics = getAnalytics(db);
-
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;

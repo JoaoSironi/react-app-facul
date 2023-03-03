@@ -1,21 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
-import Colors from '../../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from 'expo-router';
-
+import { onValue, ref, remove } from "firebase/database";
+import db from '../../constants/database';
+import itemService from "../../services/item.service";
 
 export default function () {
-    const item = [
-        { key: 0, name: "Item 1", desc: "lorem ipsum ", checked: false },
-        { key: 1, name: "Item 2", desc: "lorem ipsum ", checked: false },
-    ];
 
-    var [itens, setItens] = useState(item);
+    var [itens, setItens] = useState<Item[]>([]);
 
-    function renderItem({ item }) {
+    useEffect(() => {
+        onValue(ref(db, '/todos'), (snapshot) => {
+            const data = snapshot.val();
+            if(!data) {
+                setItens([]);
+            }
+            else {
+                const itensList = Object.keys(data).map((key) => ({
+                    key: key,
+                    name: data[key].title,
+                    desc: data[key].desc,
+                }));
+                setItens(itensList);
+            }
+            
+        });
+    });
+
+    function renderItem({ item }: { item: Item }) {
         return (
             <View style={styles.item}>
                 <View style={styles.itemDiv}>
@@ -27,7 +42,7 @@ export default function () {
                     </View>
                 </View>
                 <View style={styles.edit}>
-                    <Link href="/addTask" asChild>
+                    <Link href="/addTask"  asChild>
                     <Pressable>
                         {({ pressed }) => (
                         <FontAwesome
@@ -42,9 +57,9 @@ export default function () {
                 <View >  
                     <Entypo name="trash" size={24} color="black" 
                     onPress={
-                        () => {
-                            var newItens = itens.filter((i) => i.key != item.key);
-                            setItens(newItens);
+                        () => { 
+                            console.log(item);
+                            remove(ref(db, '/todos/' + item.key + '/'));
                         }
                     }/>
                 </View>

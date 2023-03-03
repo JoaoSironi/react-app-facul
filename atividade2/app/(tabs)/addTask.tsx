@@ -1,34 +1,18 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, TextInput, Button } from "react-native";
-
-import firebase from 'firebase/app';
-import 'firebase/database';
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDxH5PBYkaSovFc6LwYA1qRlfKZoXrsYFk",
-  authDomain: "tasklist-un.firebaseapp.com",
-  databaseURL: "https://tasklist-un-default-rtdb.firebaseio.com",
-  projectId: "tasklist-un",
-  storageBucket: "tasklist-un.appspot.com",
-  messagingSenderId: "1093057204533",
-  appId: "1:1093057204533:web:1909e903c3934e27647c7c",
-  measurementId: "G-7SCM85PB2X"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+import { Text, View, StyleSheet, TextInput, Button } from "react-native"
+import itemService from "../../services/item.service";
 
 export default function AddTaskScreen() {
-  const [value, onChangeText] = useState('');
+  const [name, onChangeText] = useState('');
+  const [desc, onChangeTextDesc] = useState('');
 
   function inserirItem() {
-    database.ref('tarefas').push({
-      nome: value,
-      concluido: false
+    itemService.addItem({
+      name: name,
+      desc: desc,
     });
-    alert(value);
+    onChangeText('');
+    onChangeTextDesc('');
   }
 
   return (
@@ -38,7 +22,13 @@ export default function AddTaskScreen() {
         <TextInput
           style={styles.input}
           onChangeText={text => onChangeText(text)}
-          value={value}
+          value={name}
+        />
+        <Text style={styles.title}>Descrição:</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => onChangeTextDesc(text)}
+          value={desc}
         />
       </View>
       <Button
