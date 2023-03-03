@@ -1,28 +1,28 @@
 import db from '../constants/database';
-import { onValue, push, ref, remove, onChildAdded } from "firebase/database";
-import { useEffect } from 'react';
+import { onValue, push, ref, remove } from "firebase/database";
 
 class itemService {
-    static async getItens() {
+    static getItens() {
+        var itens: Item[] = [];
         onValue(ref(db, '/todos'), (snapshot) => {
             const data = snapshot.val();
             if(!data) {
-                return [];
+                itens = [];
             }
             else {
-                console.log(data);
                 const itensList = Object.keys(data).map((key) => ({
+                    key: key,
                     name: data[key].title,
                     desc: data[key].desc,
                 }));
-                return itensList;
+                itens = itensList;
             }
-            
         });
+        return itens;
     }
 
-    static async deleteItem(name: string) {
-        remove(ref(db, '/todos/'));
+    static async deleteItem(key: any) {
+        remove(ref(db, '/todos/' + key + '/'));
     }
 
     static async addItem(item: Item) {

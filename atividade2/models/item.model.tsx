@@ -1,5 +1,5 @@
 interface Item {
-    key: any;
+    key?: any;
     name: string;
     desc: string;
 }

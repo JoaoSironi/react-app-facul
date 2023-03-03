@@ -4,8 +4,6 @@ import { Entypo } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from 'expo-router';
-import { onValue, ref, remove } from "firebase/database";
-import db from '../../constants/database';
 import itemService from "../../services/item.service";
 
 export default function () {
@@ -13,22 +11,10 @@ export default function () {
     var [itens, setItens] = useState<Item[]>([]);
 
     useEffect(() => {
-        onValue(ref(db, '/todos'), (snapshot) => {
-            const data = snapshot.val();
-            if(!data) {
-                setItens([]);
-            }
-            else {
-                const itensList = Object.keys(data).map((key) => ({
-                    key: key,
-                    name: data[key].title,
-                    desc: data[key].desc,
-                }));
-                setItens(itensList);
-            }
-            
-        });
+        var list =  itemService.getItens();
+        setItens(list);
     });
+
 
     function renderItem({ item }: { item: Item }) {
         return (
@@ -42,7 +28,7 @@ export default function () {
                     </View>
                 </View>
                 <View style={styles.edit}>
-                    <Link href="/addTask"  asChild>
+                    <Link href="/addTask" asChild>
                     <Pressable>
                         {({ pressed }) => (
                         <FontAwesome
@@ -57,10 +43,7 @@ export default function () {
                 <View >  
                     <Entypo name="trash" size={24} color="black" 
                     onPress={
-                        () => { 
-                            console.log(item);
-                            remove(ref(db, '/todos/' + item.key + '/'));
-                        }
+                        () => { itemService.deleteItem(item.key) }
                     }/>
                 </View>
             </View>

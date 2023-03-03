@@ -21,7 +21,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       }}>
       <Tabs.Screen
-        name="lista"
+        name="index"
         options={{
           title: 'Lista de Tarefas',
           tabBarIcon: ({ color }) => <Entypo name="text" size={24} color="white" />,

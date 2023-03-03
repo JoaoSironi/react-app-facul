@@ -5,7 +5,7 @@ import itemService from "../../services/item.service";
 export default function AddTaskScreen() {
   const [name, onChangeText] = useState('');
   const [desc, onChangeTextDesc] = useState('');
-
+  
   function inserirItem() {
     itemService.addItem({
       name: name,
