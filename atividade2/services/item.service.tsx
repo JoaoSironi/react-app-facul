@@ -1,39 +1,44 @@
 import db from '../constants/database';
-import { onValue, push, ref, remove } from "firebase/database";
+import { get, onValue, push, ref, remove, update } from "firebase/database";
 
 class itemService {
-    static getItens() {
-        var itens: Item[] = [];
-        onValue(ref(db, '/todos'), (snapshot) => {
-            const data = snapshot.val();
-            if(!data) {
-                itens = [];
-            }
-            else {
-                const itensList = Object.keys(data).map((key) => ({
-                    key: key,
-                    name: data[key].title,
-                    desc: data[key].desc,
-                }));
-                itens = itensList;
-            }
-        });
-        return itens;
-    }
+    static async getItens() {
+        try {
+          const snapshot = await get(ref(db, "/todos"));
+          const data = snapshot.val();
+          
+          if (!data) {
+            return [];
+          }
+          
+          const itensList = Object.keys(data).map((key) => ({
+            key: key,
+            name: data[key].title,
+            desc: data[key].desc,
+          }));
+          
+          return itensList;
+        } catch (error) {
+          return [];
+        }
+      }
 
-    static async deleteItem(key: any) {
+    static deleteItem(key: any) {
         remove(ref(db, '/todos/' + key + '/'));
     }
 
-    static async addItem(item: Item) {
+    static addItem(item: Item) {
         push(ref(db, 'todos/'), {
             title: item.name,
             desc: item.desc,
         });
     }
 
-    static async updateItem(item: Item) {
-
+    static updateItem(item: Item) {
+        update(ref(db, 'todos/' + item.key), {
+            title: item.name,
+            desc: item.desc,
+        });
     }
 }
 

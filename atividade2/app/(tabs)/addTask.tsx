@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Text, View, StyleSheet, TextInput, Button } from "react-native"
 import itemService from "../../services/item.service";
 
-export default function AddTaskScreen() {
+export default function AddTaskScreen(params: any) {
   const [name, onChangeText] = useState('');
   const [desc, onChangeTextDesc] = useState('');
-  
+
   function inserirItem() {
     itemService.addItem({
       name: name,
@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
   },
   inputView: {
-      flexDirection: "row",
+      flexDirection: "column",
       alignItems: "center",
-      justifyContent: "space-between"
+      justifyContent: "center"
   },
   input: {
       backgroundColor: "#fff",
       borderColor: "#CCC",
       borderWidth: 3,
       padding: 5,
-      margin: 20,
-      flex: 1
+      width: 300,
+      margin: 5,
+      marginBottom: 20,
   },
 });
